@@ -6,8 +6,8 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultType;
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils;
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult;
-import com.google.android.apps.common.testing.accessibility.framework.DuplicateClickableBoundsViewCheck;
-import com.google.android.apps.common.testing.accessibility.framework.TouchTargetSizeViewCheck;
+import com.google.android.apps.common.testing.accessibility.framework.checks.DuplicateClickableBoundsCheck;
+import com.google.android.apps.common.testing.accessibility.framework.checks.TouchTargetSizeCheck;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -146,12 +146,10 @@ public class AccessibilityUtil {
       final Matcher<? super AccessibilityViewCheckResult> matcher) {
     initializeValidator();
     /* Suppress all touch target results, since views all report size as 0x0 */
-    Matcher<AccessibilityCheckResult> touchTargetResultMatcher = 
-        AccessibilityCheckResultUtils.matchesChecks(
-            Matchers.equalTo(TouchTargetSizeViewCheck.class));
-    Matcher<AccessibilityCheckResult> duplicateBoundsResultMatcher = 
-        AccessibilityCheckResultUtils.matchesChecks(
-            Matchers.equalTo(DuplicateClickableBoundsViewCheck.class));
+    Matcher<AccessibilityCheckResult> touchTargetResultMatcher =
+        AccessibilityCheckResultUtils.matchesCheck(TouchTargetSizeCheck.class);
+    Matcher<AccessibilityCheckResult> duplicateBoundsResultMatcher =
+        AccessibilityCheckResultUtils.matchesCheck(DuplicateClickableBoundsCheck.class);
     if (matcher == null) {
       validator.setSuppressingResultMatcher(
           Matchers.anyOf(touchTargetResultMatcher, duplicateBoundsResultMatcher));
